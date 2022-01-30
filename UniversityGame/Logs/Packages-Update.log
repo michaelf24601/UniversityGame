@@ -1,14 +1,14 @@
 
-=== Sat Jan 22 19:31:12 2022
+=== Wed Jan 26 18:01:52 2022
 
 Packages were changed.
 Update Mode: mergeDefaultDependencies
 
 The following packages were added:
-  com.unity.collab-proxy@1.9.0
+  com.unity.collab-proxy@1.15.7
   com.unity.ide.rider@2.0.7
-  com.unity.ide.visualstudio@2.0.11
-  com.unity.ide.vscode@1.2.3
+  com.unity.ide.visualstudio@2.0.12
+  com.unity.ide.vscode@1.2.4
   com.unity.modules.ai@1.0.0
   com.unity.modules.androidjni@1.0.0
   com.unity.modules.animation@1.0.0
@@ -44,13 +44,5 @@ The following packages were added:
   com.unity.textmeshpro@3.0.6
   com.unity.timeline@1.4.8
   com.unity.ugui@1.0.0
-
-=== Sat Jan 22 19:50:17 2022
-
-Packages were changed.
-Update Mode: updateDependencies
-
 The following packages were updated:
-  com.unity.collab-proxy from version 1.9.0 to 1.15.7
-  com.unity.ide.visualstudio from version 2.0.11 to 2.0.12
-  com.unity.ide.vscode from version 1.2.3 to 1.2.4
+  com.unity.render-pipelines.universal from version 10.8.0 to 10.8.1
