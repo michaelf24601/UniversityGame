@@ -11,6 +11,8 @@ public class TerrainGenerator : MonoBehaviour
 {
     public int size = 50; //size in squares of the mesh
     public Gradient gradient;
+    public float scale = 0.3f;
+    public float magnitude = 3f;
 
     private Mesh mesh;
     private Vector3[] vertices;
@@ -24,7 +26,10 @@ public class TerrainGenerator : MonoBehaviour
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+    }
 
+    private void Update()
+    {
         createMesh();
         updateMesh();
     }
@@ -37,9 +42,8 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int x = 0; x < size + 1; x++)
             {
-                float y = Mathf.PerlinNoise(x * .01f, z * .01f) * 10f;
-                int y1 = (int)(y * 10);
-                y = y1/10;
+                float y = Mathf.PerlinNoise(x * scale, z * scale) * magnitude;
+                y = (int)(y);
                 vertices[i] = new Vector3(x,y,z);
 
                 if (y > maxTerrainHeight)
