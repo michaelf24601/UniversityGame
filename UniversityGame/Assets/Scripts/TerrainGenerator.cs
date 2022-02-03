@@ -13,9 +13,9 @@ public class TerrainGenerator : MonoBehaviour
     public Gradient gradient;
     public float scale = 0.3f;
     public float magnitude = 3f;
-
-    private Mesh mesh;
-    private Vector3[] vertices;
+    public MeshCollider collider;
+    public Mesh mesh;
+    public Vector3[] vertices;
     private int[] triangles;
     private Color[] vertexColors;
 
@@ -25,12 +25,24 @@ public class TerrainGenerator : MonoBehaviour
     private void Start()
     {
         mesh = new Mesh();
+        mesh.name = "Terrain";
         GetComponent<MeshFilter>().mesh = mesh;
+        createMesh();
+        collider = gameObject.GetComponent<MeshCollider>();
+        collider.sharedMesh = null;
+        collider.sharedMesh = mesh;
+        Physics.SyncTransforms();
+
+        Physics.autoSimulation = false;
+        Physics.Simulate(Time.fixedDeltaTime);
+        Physics.autoSimulation = true;
+        //collider.convex = false;
+
     }
 
     private void Update()
     {
-        createMesh();
+        
         updateMesh();
     }
 
@@ -89,14 +101,17 @@ public class TerrainGenerator : MonoBehaviour
                 i++;
             }
         }
+       
     }
 
     void updateMesh()
     {
+        Physics.SyncTransforms();
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.colors = vertexColors;
         mesh.RecalculateNormals();
+        
     }
 }
