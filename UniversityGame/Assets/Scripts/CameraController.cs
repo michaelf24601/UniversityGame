@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     public float wsadSpeed = 1f;
     public float scrollSpeed = 1f;
     public float mouseRotateSpeed = 1f;
-
+    public bool buildmode;
     //Transform camPos;
 
     private void Start()
@@ -63,7 +63,12 @@ public class CameraController : MonoBehaviour
             Vector3 rotation = new Vector3(-Input.GetAxis("Mouse Y") * mouseRotateSpeed * Time.deltaTime, Input.GetAxis("Mouse X") * mouseRotateSpeed * Time.deltaTime, 0);
             transform.Rotate(rotation);
 
-            float x = transform.rotation.eulerAngles.x;
+            float x = 0;
+            if (buildmode != true)
+            {
+                x = transform.rotation.eulerAngles.x;
+            }
+            
             float y = transform.rotation.eulerAngles.y;
 
             transform.rotation = Quaternion.Euler(x, y, 0);
