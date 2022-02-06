@@ -251,7 +251,6 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   scale: 0.03
   magnitude: 5
-  collider: {fileID: 0}
   mesh: {fileID: 0}
   vertices: []
 --- !u!114 &478686193
@@ -361,7 +360,7 @@ Transform:
   m_GameObject: {fileID: 952694883}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 111.756775, y: -46.34781, z: 295.22668}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

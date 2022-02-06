@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+using UnityEngine.Serialization;
+
 
 /**
  * Uses perlin noise to generate a mesh for the terrain. Must have a mesh renderer and mesh filter on the attached object.
@@ -13,7 +16,7 @@ public class TerrainGenerator : MonoBehaviour
     public Gradient gradient;
     public float scale = 0.3f;
     public float magnitude = 3f;
-    public MeshCollider collider;
+    
     public Mesh mesh;
     public Vector3[] vertices;
     private int[] triangles;
@@ -26,16 +29,25 @@ public class TerrainGenerator : MonoBehaviour
     {
         mesh = new Mesh();
         mesh.name = "Terrain";
-        GetComponent<MeshFilter>().mesh = mesh;
+        
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         createMesh();
-        collider = gameObject.GetComponent<MeshCollider>();
-        collider.sharedMesh = null;
-        collider.sharedMesh = mesh;
-        Physics.SyncTransforms();
+        updateMesh();
+       
+        // Create our mesh simplifier and setup our entire mesh in it
+        UnityMeshSimplifier.MeshSimplifier meshSimplifier = new UnityMeshSimplifier.MeshSimplifier();
+        //meshSimplifier.Initialize(mesh);
 
-        Physics.autoSimulation = false;
-        Physics.Simulate(Time.fixedDeltaTime);
-        Physics.autoSimulation = true;
+        //This is where the magic happens, lets simplify!
+        //meshSimplifier.SimplifyMesh(0.2f);
+        //mesh = meshSimplifier.ToMesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+        FindObjectOfType<GridManager>().Test();
+       
+        //16641
+        
+
         //collider.convex = false;
 
     }
@@ -43,12 +55,14 @@ public class TerrainGenerator : MonoBehaviour
     private void Update()
     {
         
-        updateMesh();
+       
     }
 
     void createMesh()
     {
+       
         vertices = new Vector3[(size+1) * (size+1)];
+        Vector2[] uv = new Vector2[vertices.Length];
         //verticies
         for (int z = 0, i = 0; z < size + 1; z++)
         {
@@ -57,7 +71,7 @@ public class TerrainGenerator : MonoBehaviour
                 float y = Mathf.PerlinNoise(x * scale, z * scale) * magnitude;
                 y = (int)(y);
                 vertices[i] = new Vector3(x,y,z);
-
+                uv[i] = new Vector2(x / (float)size, z / (float)size);
                 if (y > maxTerrainHeight)
                 {
                     maxTerrainHeight = y;
@@ -101,12 +115,13 @@ public class TerrainGenerator : MonoBehaviour
                 i++;
             }
         }
-       
+        mesh.uv = uv;
+
     }
 
     void updateMesh()
     {
-        Physics.SyncTransforms();
+        
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
@@ -114,4 +129,5 @@ public class TerrainGenerator : MonoBehaviour
         mesh.RecalculateNormals();
         
     }
+    
 }
