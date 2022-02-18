@@ -21,6 +21,7 @@ public class BuildModeManager : MonoBehaviour
     {
         if(timer > 0)
         {
+
             timer -= Time.deltaTime;
             if (buildModeOn == false)
             {

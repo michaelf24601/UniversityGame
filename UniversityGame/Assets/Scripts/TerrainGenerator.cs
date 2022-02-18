@@ -12,15 +12,19 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(MeshFilter))]
 public class TerrainGenerator : MonoBehaviour
 {
-    public int size = 50; //size in squares of the mesh
+    public int size = 3; //size in squares of the mesh
     public Gradient gradient;
+
+    //terrain generation variables
     public float scale = 0.3f;
     public float magnitude = 3f;
     
-    public Mesh mesh;
-    public Vector3[] vertices;
-    private int[] triangles;
-    private Color[] vertexColors;
+    //mesh data variables
+    private Mesh mesh;
+    private List<Vector3> vertices = new List<Vector3>();
+    private List<int> triangles = new List<int>();
+    private List<Vector2> uvs = new List<Vector2>();
+    private List<Color> vertexColors = new List<Color>();
 
     private float minTerrainHeight;
     private float maxTerrainHeight;
@@ -30,48 +34,31 @@ public class TerrainGenerator : MonoBehaviour
         mesh = new Mesh();
         mesh.name = "Terrain";
         
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        createMesh();
-        updateMesh();
+        createMesh(); //calculate values of above mesh data variables
+        updateMesh(); //assign mesh data variables to mesh
        
-        // Create our mesh simplifier and setup our entire mesh in it
-        UnityMeshSimplifier.MeshSimplifier meshSimplifier = new UnityMeshSimplifier.MeshSimplifier();
-        //meshSimplifier.Initialize(mesh);
-
-        //This is where the magic happens, lets simplify!
-        //meshSimplifier.SimplifyMesh(0.2f);
-        //mesh = meshSimplifier.ToMesh();
-        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshFilter>().mesh = mesh; 
         GetComponent<MeshCollider>().sharedMesh = mesh;
-        FindObjectOfType<GridManager>().Test();
-       
-        //16641
-        
 
-        //collider.convex = false;
-
-    }
-
-    private void Update()
-    {
-        
-       
+        //run the slope detection. maybe in the future we might want to run other stuff during the "generation" stage of the game and maybe, at that point, we should make a different system for that
+        FindObjectOfType<GridManager>().SlopeDetection();
     }
 
     void createMesh()
     {
-       
-        vertices = new Vector3[(size+1) * (size+1)];
-        Vector2[] uv = new Vector2[vertices.Length];
+
         //verticies
-        for (int z = 0, i = 0; z < size + 1; z++)
+        int vert = 0; //keeps track of the number of verticies
+        for (int z = 0; z < size + 1; z++)
         {
             for (int x = 0; x < size + 1; x++)
             {
-                float y = Mathf.PerlinNoise(x * scale, z * scale) * magnitude;
-                y = (int)(y);
-                vertices[i] = new Vector3(x,y,z);
-                uv[i] = new Vector2(x / (float)size, z / (float)size);
+                //vertex and uv data
+                float y = terrainHeightGeneration(x, z);
+                vertices.Add(new Vector3(x,y,z));
+                uvs.Add(new Vector2(x, z));
+
+                //record min and max terrain hight b/c idk, maybe it'll come in handy later
                 if (y > maxTerrainHeight)
                 {
                     maxTerrainHeight = y;
@@ -80,12 +67,29 @@ public class TerrainGenerator : MonoBehaviour
                 {
                     minTerrainHeight = y;
                 }
-                i++;
+
+                //Debug.LogFormat("Vert: ({0},{1})", x, z);
+
+                //triangles 
+                if (x < size && z < size) //don't overflow stuff
+                {
+                    triangles.Add(vert);
+                    triangles.Add(vert + size + 1);
+                    triangles.Add(vert + 1);
+                    triangles.Add(vert + 1);
+                    triangles.Add(vert + size + 1);
+                    triangles.Add(vert + size + 2);
+                    //Debug.LogFormat("Tris: ({0},{1},{2},{3},{4},{5})", vert, vert + size + 1, vert + 1, vert + 1, vert + size + 1, vert + size + 2);
+                }
+                vert++;
+
+                //vertex coloring
+                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, y); //basically Unity's way of mapping values
+                vertexColors.Add(gradient.Evaluate(height));
             }
         }
 
-        triangles = new int[6 * size * size];
-
+        /*
         int vert = 0;
         int tris = 0;
         for (int z = 0; z < size; z++)
@@ -104,6 +108,7 @@ public class TerrainGenerator : MonoBehaviour
             }
             vert++;
         }
+        
 
         vertexColors = new Color[vertices.Length];
         for (int z = 0, i = 0; z < size + 1; z++)
@@ -116,18 +121,26 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
         mesh.uv = uv;
+        */
 
+    }
+
+    float terrainHeightGeneration(int x, int z)
+    {
+        float y = Mathf.PerlinNoise(x * scale, z * scale) * magnitude;
+        y *= 1.5f;
+        y = Mathf.Round(y);
+        y /= 1.5f;
+        return y;
     }
 
     void updateMesh()
-    {
-        
+    { 
         mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.colors = vertexColors;
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.colors = vertexColors.ToArray();
+        mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
-        
     }
-    
 }
