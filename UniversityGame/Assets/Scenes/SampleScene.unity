@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 478686192}
   - component: {fileID: 478686193}
   - component: {fileID: 478686194}
+  - component: {fileID: 478686195}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -279,6 +280,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: -1
   m_Mesh: {fileID: 0}
+--- !u!114 &478686195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478686188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031d2e1673335794eba02c67183390ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 478686192}
+  trees:
+  - {fileID: 352333222897183450, guid: 827c38b41772198488d2f5e73cdb4069, type: 3}
+  treePercentage: 9
 --- !u!1 &952694883
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1278989274}
   - component: {fileID: 1278989273}
+  - component: {fileID: 1278989275}
   m_Layer: 0
   m_Name: ScriptHolder
   m_TagString: Untagged
@@ -390,6 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 4024990909611264130, guid: aa8c312abe0ca754d9dc9e8008a96c72, type: 3}
+  build: {fileID: 0}
 --- !u!4 &1278989274
 Transform:
   m_ObjectHideFlags: 0
@@ -404,6 +423,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1278989275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278989272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6dc8e523b79fa34387f428d0d4f0edd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildModeOn: 0
+  cameraa: {fileID: 1687258581}
+  controller: {fileID: 2008099305}
+  skyboxNormal: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
+  skyboxBuild: {fileID: 2100000, guid: e63b16ad3679eeb4f99bc678e22c8877, type: 2}
+  timer: 0
 --- !u!1 &1660808933
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,13 +515,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660808933}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.080515, z: -0, w: 0.99675345}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 9.236, z: 0}
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +696,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2008099306}
   - component: {fileID: 2008099305}
-  - component: {fileID: 2008099309}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -698,24 +734,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2008099309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008099304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6dc8e523b79fa34387f428d0d4f0edd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildModeOn: 0
-  cameraa: {fileID: 1687258581}
-  controller: {fileID: 2008099305}
-  skyboxNormal: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
-  skyboxBuild: {fileID: 2100000, guid: e63b16ad3679eeb4f99bc678e22c8877, type: 2}
-  timer: 0
 --- !u!1 &2138677391
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,12 +5,12 @@ using UnityEngine;
 public class PlacementPrototype : MonoBehaviour
 {
     public GameObject obj;
-
+    public BuildModeManager build;
     private GameObject preview = null;
 
     private void Start()
     {
-
+        build = GetComponent<BuildModeManager>();
     }
 
     private void Update()
@@ -20,29 +20,33 @@ public class PlacementPrototype : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit)) //if you hit the mesh
         {
-            //move preview to position on mesh
-            if (preview == null)
+            if(build.buildModeOn)
             {
-                preview = Instantiate(obj);
-                Destroy(preview.GetComponent<Collider>());
-            }
-            float yOffset = 0.5f;
-            Vector3 previewPos = new Vector3(Mathf.RoundToInt(hit.point.x), hit.point.y + yOffset, Mathf.RoundToInt(hit.point.z));
-            preview.transform.position = previewPos;
-
-            //check if point on mesh is flatw
-            Color col = Color.red;
-            if (isFlat(hit.point))
-            {
-                col = Color.green;
-                //if mouse down then instantiate object
-                if (Input.GetMouseButtonDown(0))
+                //move preview to position on mesh
+                if (preview == null)
                 {
-                    GameObject newObj = Instantiate(obj);
-                    newObj.transform.position = previewPos;
+                    preview = Instantiate(obj);
+                    Destroy(preview.GetComponent<Collider>());
                 }
+                float yOffset = 0.5f;
+                Vector3 previewPos = new Vector3(Mathf.RoundToInt(hit.point.x), hit.point.y + yOffset, Mathf.RoundToInt(hit.point.z));
+                preview.transform.position = previewPos;
+
+                //check if point on mesh is flatw
+                Color col = Color.red;
+                if (isFlat(hit.point))
+                {
+                    col = Color.green;
+                    //if mouse down then instantiate object
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        GameObject newObj = Instantiate(obj);
+                        newObj.transform.position = previewPos;
+                    }
+                }
+                preview.GetComponent<Renderer>().material.color = col;
             }
-            preview.GetComponent<Renderer>().material.color = col;
+           
         }
         else
         {
