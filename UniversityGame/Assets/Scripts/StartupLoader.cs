@@ -7,17 +7,13 @@ using UnityEngine;
  */
 public class StartupLoader : MonoBehaviour
 {
-    TerrainGenerator terrainGenerator;
 
     void Start()
     {
-        terrainGenerator = FindObjectOfType<TerrainGenerator>();
-
+        TerrainGenerator terrainGenerator = GetComponent<TerrainGenerator>();
+        terrainGenerator.generateTerrain();
+        TreePlacer treePlacer = GetComponent<TreePlacer>();
+        treePlacer.placeTrees(terrainGenerator.meshLength * terrainGenerator.size);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -8,53 +8,55 @@ using UnityEngine.Serialization;
 /**
  * Uses perlin noise to generate a mesh for the terrain. Must have a mesh renderer and mesh filter on the attached object.
  */
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(MeshFilter))]
 public class TerrainGenerator : MonoBehaviour
 {
     public int size = 3; //length of the terrain in chunks
     public Gradient gradient;
+
+    public Material terrainShader;
 
     //terrain generation variables
     public float scale = 0.3f;
     public float magnitude = 3f;
     
     //mesh data variables
-    int meshLength = 240;
-
-    private float minTerrainHeight;
-    private float maxTerrainHeight;
+    public int meshLength = 240;
 
     private float terrainSeed;
 
-    private void Start()
+    public void generateTerrain()
     {
         terrainSeed = Random.Range(0,1000000);
 
-        Mesh[] chunks = new Mesh[size * size];
-
         //holder parent game object for all the meshes
-        GameObject terrain = new GameObject();
-        terrain.name = "Terrain";
+        GameObject bigDaddy = new GameObject();
+        Transform daddy = bigDaddy.transform;
+        bigDaddy.name = "Terrain";
 
-       for (int x = 0; x < size; x++)
-       {
+        int chunkNum = 1;
+        for (int x = 0; x < size; x++)
+        {
             for (int z = 0; z < size; z++)
             {
-                Mesh chunk = new Mesh();
-                chunk.name = "Chunk_" + (size * x) + z;
-
-                createMesh(x,z); //calculate values of above mesh data variables
+                string chunkName = "Chunk_" + chunkNum;
+                GameObject childObj = new GameObject();
+                Transform child = childObj.transform;
+                child.name = chunkName;
+                Mesh chunk = createMesh(x, z);
+                chunk.name = chunkName;
+                MeshFilter meshFilter = childObj.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = childObj.AddComponent<MeshRenderer>();
+                MeshCollider meshCollider = childObj.AddComponent<MeshCollider>();
+                meshRenderer.sharedMaterial = terrainShader;
+                meshFilter.mesh = chunk;
+                meshCollider.sharedMesh = chunk;
+                child.parent = daddy;
+                chunkNum++;
             }
-       }
-
-        updateMesh(); //assign mesh data variables to mesh
-       
-        GetComponent<MeshFilter>().mesh = mesh; 
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        }
 
         //run the slope detection. maybe in the future we might want to run other stuff during the "generation" stage of the game and maybe, at that point, we should make a different system for that
-        FindObjectOfType<GridManager>().SlopeDetection();
+        //FindObjectOfType<GridManager>().SlopeDetection();
     }
 
     /**
@@ -62,15 +64,18 @@ public class TerrainGenerator : MonoBehaviour
      */
     Mesh createMesh(int xOffset, int zOffset)
     {
+        xOffset *= meshLength;
+        zOffset *= meshLength;
+
         //variables for mesh data
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
         List<Color> vertexColors = new List<Color>();
 
-        Mesh mesh = new Mesh();
+        float minTerrainHeight = float.MaxValue;
+        float maxTerrainHeight = float.MinValue;
 
-        xOffset *= meshLength;
-        zOffset *= meshLength;
+        Mesh mesh = new Mesh();
 
         //verticies
         int vert = 0; //keeps track of the number of verticies
@@ -95,7 +100,7 @@ public class TerrainGenerator : MonoBehaviour
                 //Debug.LogFormat("Vert: ({0},{1})", x, z);
 
                 //triangles 
-                if (x < meshLength && z < meshLength) //don't overflow stuff
+                if (x < meshLength + xOffset && z < meshLength + zOffset) //don't overflow stuff
                 {
                     triangles.Add(vert);
                     triangles.Add(vert + meshLength + 1);
@@ -113,7 +118,14 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
 
+        //update mesh
+        mesh.Clear();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.colors = vertexColors.ToArray();
+        mesh.RecalculateNormals();
 
+        return mesh;
     }
 
     float terrainHeightGeneration(int x, int z)
@@ -123,14 +135,5 @@ public class TerrainGenerator : MonoBehaviour
         y = Mathf.Round(y);
         y /= 1.5f;
         return y;
-    }
-
-    void updateMesh(Mesh mesh)
-    { 
-        mesh.Clear();
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.colors = vertexColors.ToArray();
-        mesh.RecalculateNormals();
     }
 }

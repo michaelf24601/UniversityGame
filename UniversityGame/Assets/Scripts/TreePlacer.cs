@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TreePlacer : MonoBehaviour
 {
-    public TerrainGenerator terrain;
     public GameObject[] trees;
     public float treePercentage;
     private bool generate;
@@ -15,13 +14,13 @@ public class TreePlacer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void placeTrees(int meshSize)
     {
         if (generate == true)
         {
-            for(int x = 0; x < terrain.size;x++)
+            for(int x = 0; x < meshSize; x++)
             {
-                for (int z = 0; z < terrain.size; z++)
+                for (int z = 0; z < meshSize; z++)
                 {
                     float ran1 = Random.Range(0, 10);
                     if(10-ran1 > treePercentage)
