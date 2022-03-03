@@ -16,14 +16,17 @@ public class TreePlacer : MonoBehaviour
         {
             for (int z = 0; z < meshSize; z++)
             {
-                float ran1 = Random.Range(0, 10);
-                if (10 - ran1 > treePercentage)
+                float ran1 = Random.Range(0, 100);
+                if (ran1 > 100 - treePercentage)
                 {
-                    float ran2 = Random.Range(0, trees.Length - 1);
-                    int ranInt = (int)ran2;
+                    int ran2 = (int)Mathf.Round(Random.Range(0, trees.Length));
+                   
                     RaycastHit hit;
                     Physics.Raycast(new Vector3(x, 10, z), Vector3.down, out hit);
-                    GameObject spawnedTree = GameObject.Instantiate(trees[ranInt], new Vector3(x, 10 - hit.distance, z), Quaternion.Euler(Vector3.zero), null);
+                    GameObject spawnedTree = GameObject.Instantiate(trees[ran2], new Vector3(x, 10 - hit.distance, z), Quaternion.Euler(Vector3.zero), null);
+                    spawnedTree.name = "Tree Type: " + ran2 + " X: " + x + " Z: " +z;
+                    spawnedTree.transform.Rotate(0, Random.Range(0, 180), 0);
+                    spawnedTree.transform.parent = gameObject.transform;
                 }
             }
         }
