@@ -332,6 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obj: {fileID: 4024990909611264130, guid: aa8c312abe0ca754d9dc9e8008a96c72, type: 3}
   build: {fileID: 0}
+  preview: {fileID: 0}
 --- !u!4 &1278989274
 Transform:
   m_ObjectHideFlags: 0
@@ -344,7 +345,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1278989275
 MonoBehaviour:
@@ -353,17 +354,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278989272}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6dc8e523b79fa34387f428d0d4f0edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildModeOn: 0
-  cameraa: {fileID: 1687258581}
-  controller: {fileID: 2008099305}
-  skyboxNormal: {fileID: 2100000, guid: 0ffaa0b7117ba8c47a9d05ae701d4b4d, type: 2}
-  skyboxBuild: {fileID: 2100000, guid: e63b16ad3679eeb4f99bc678e22c8877, type: 2}
-  timer: 0
 --- !u!114 &1278989276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,6 +525,7 @@ GameObject:
   - component: {fileID: 1687258584}
   - component: {fileID: 1687258582}
   - component: {fileID: 1687258583}
+  - component: {fileID: 1687258586}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -628,61 +624,29 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 5, z: -10}
+  m_LocalRotation: {x: -0.13158351, y: -0.32479224, z: 0.045883685, w: -0.9354628}
+  m_LocalPosition: {x: -4, y: 5, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2008099306}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
---- !u!1 &2008099304
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2008099306}
-  - component: {fileID: 2008099305}
-  m_Layer: 0
-  m_Name: CamDaddy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2008099305
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1687258586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008099304}
+  m_GameObject: {fileID: 1687258581}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7f7d603bb77dfb40ac524fa1412831f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wsadSpeed: 20
+  wsadSpeed: 50
   scrollSpeed: 100
-  mouseRotateSpeed: 500
-  buildmode: 0
---- !u!4 &2008099306
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008099304}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1687258585}
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  mouseRotateSpeed: 400
+  currentState: 1
 --- !u!1 &2138677391
 GameObject:
   m_ObjectHideFlags: 0

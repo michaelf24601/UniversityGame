@@ -4,81 +4,38 @@ using UnityEngine;
 
 public class BuildModeManager : MonoBehaviour
 {
-    public bool buildModeOn;
-    public GameObject cameraa;
-    public CameraController controller;
-    public Material skyboxNormal;
-    public Material skyboxBuild;
-    public float timer;
-    // Start is called before the first frame update
-    void Start()
+    private CameraController cameraController;
+    bool buildMode = false;
+
+    private void Start()
     {
-        timer = 0;
+        cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if(timer > 0)
+        if (Input.GetKeyDown(KeyCode.B)) //lets say b for build mode. probably want to use a different input system later
         {
-
-            timer -= Time.deltaTime;
-            if (buildModeOn == false)
+            if (cameraController.currentState == CameraController.State.Transition) return;
+            //change camera controler to transitionary state to disable movement input
+            //lerp the camera rotation to vertical
+            //lerp the fustrum to orthographic 
+            //change camera controler to build mode to use build mode movement
+            if (buildMode)
             {
-                if(cameraa.transform.localPosition != new Vector3(0, 5, -10))
-                {
-                    cameraa.transform.localPosition -= new Vector3(0, 0, Time.deltaTime*20);
-                }
-                if (cameraa.transform.localEulerAngles != new Vector3(30, 0, 0))
-                {
-                    cameraa.transform.localEulerAngles -= new Vector3(Time.deltaTime * 120, 0, 0);
-                }
-                cameraa.GetComponent<Camera>().fieldOfView += Time.deltaTime * 40;
-            }
-            if (buildModeOn == true)
+                cameraController.currentState = CameraController.State.Normal;
+                cameraController.transform.rotation = Quaternion.Euler(30, 0, 0);
+                cameraController.gameObject.GetComponent<Camera>().orthographic = false;
+                Camera.main.orthographicSize = 5;
+                buildMode = false;
+            } else
             {
-                if (cameraa.transform.localPosition != new Vector3(0, 5, 0))
-                {
-                    cameraa.transform.localPosition += new Vector3(0, 0, Time.deltaTime * 20);
-                }
-                if (cameraa.transform.localEulerAngles != new Vector3(90, 0, 0))
-                {
-                    cameraa.transform.localEulerAngles += new Vector3(Time.deltaTime * 120, 0, 0);
-                }
-                cameraa.GetComponent<Camera>().fieldOfView -= Time.deltaTime * 40;
-
-            }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                buildModeOn = !buildModeOn;
-                timer = 0.5f;
-            }
-            else
-            {
-                if (buildModeOn == true)
-                {
-                    cameraa.transform.localPosition = new Vector3(0, 5, 0);
-                    cameraa.transform.localEulerAngles = new Vector3(90, 0, 0);
-                    controller.buildmode = true;
-                    RenderSettings.skybox = skyboxBuild;
-                    cameraa.GetComponent<Camera>().fieldOfView = 60;
-                }
-                if (buildModeOn == false)
-                {
-                    cameraa.transform.localPosition = new Vector3(0, 5, -10);
-                    cameraa.transform.localEulerAngles = new Vector3(30, 0, 0);
-                    controller.buildmode = false;
-                    RenderSettings.skybox = skyboxNormal;
-                    cameraa.GetComponent<Camera>().fieldOfView = 80;
-
-                }
+                cameraController.currentState = CameraController.State.BuildMode;
+                cameraController.transform.rotation = Quaternion.Euler(90, 0, 0);
+                cameraController.gameObject.GetComponent<Camera>().orthographic = true;
+                buildMode = true;
             }
             
-
         }
-        
     }
 }

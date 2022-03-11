@@ -7,8 +7,13 @@ public class CameraController : MonoBehaviour
     public float wsadSpeed = 1f;
     public float scrollSpeed = 1f;
     public float mouseRotateSpeed = 1f;
-    public bool buildmode;
-    //Transform camPos;
+    public enum State
+    {
+        Transition,
+        Normal,
+        BuildMode
+    }
+    public State currentState = State.Normal;
 
     private void Start()
     {
@@ -16,6 +21,21 @@ public class CameraController : MonoBehaviour
     }
 
     private void Update()
+    {
+        switch (currentState)
+        {
+            case State.Normal:
+                normalMovement();
+                break;
+            case State.BuildMode:
+                buildModeMovement();
+                break;
+            default:
+                //don't accept input if in a transitionary state
+                break;
+        }
+    }
+    private void normalMovement()
     {
         Vector3 moveDir = Vector3.zero;
         Vector3 newPos = this.gameObject.transform.position;
@@ -53,7 +73,7 @@ public class CameraController : MonoBehaviour
         moveDir = moveDir.normalized;
 
         newPos += moveDir * wsadSpeed * Time.deltaTime;
-        newPos += transform.forward * Input.mouseScrollDelta.y * scrollSpeed *Time.deltaTime;
+        newPos += transform.forward * Input.mouseScrollDelta.y * scrollSpeed * Time.deltaTime;
 
         transform.position = newPos;
 
@@ -63,12 +83,7 @@ public class CameraController : MonoBehaviour
             Vector3 rotation = new Vector3(-Input.GetAxis("Mouse Y") * mouseRotateSpeed * Time.deltaTime, Input.GetAxis("Mouse X") * mouseRotateSpeed * Time.deltaTime, 0);
             transform.Rotate(rotation);
 
-            float x = 0;
-            if (buildmode != true)
-            {
-                x = transform.rotation.eulerAngles.x;
-            }
-            
+            float x = transform.rotation.eulerAngles.x;
             float y = transform.rotation.eulerAngles.y;
 
             transform.rotation = Quaternion.Euler(x, y, 0);
@@ -77,5 +92,36 @@ public class CameraController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    private void buildModeMovement()
+    {
+        Vector3 moveDir = Vector3.zero;
+        Vector3 newPos = this.gameObject.transform.position;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            moveDir += transform.up;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            moveDir += transform.up * -1;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            moveDir += transform.right * -1;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            moveDir += transform.right;
+        }
+        moveDir = moveDir.normalized;
+        newPos += moveDir * wsadSpeed * Time.deltaTime;
+        Camera.main.orthographicSize += Input.mouseScrollDelta.y * scrollSpeed * Time.deltaTime;
+        if (newPos.y < 2)
+        {
+            newPos.y = 2;
+        }
+        transform.position = newPos;
     }
 }
