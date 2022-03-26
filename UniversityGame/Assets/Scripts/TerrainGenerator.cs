@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
  */
 public class TerrainGenerator : MonoBehaviour
 {
-    public int size = 3; //length of the terrain in chunks
+    public int size; //length of the terrain in chunks
     public Gradient gradient;
 
     public Material terrainShader;
@@ -20,7 +20,7 @@ public class TerrainGenerator : MonoBehaviour
     public float magnitude = 3f;
     
     //mesh data variables
-    public int meshLength = 240;
+    public int meshLength;
 
     private float terrainSeed;
 

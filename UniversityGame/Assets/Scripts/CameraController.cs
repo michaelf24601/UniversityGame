@@ -117,7 +117,12 @@ public class CameraController : MonoBehaviour
         }
         moveDir = moveDir.normalized;
         newPos += moveDir * wsadSpeed * Time.deltaTime;
-        Camera.main.orthographicSize += Input.mouseScrollDelta.y * scrollSpeed * Time.deltaTime;
+        Camera cam = Camera.main;
+        cam.orthographicSize += Input.mouseScrollDelta.y * scrollSpeed * Time.deltaTime;
+        if (cam.orthographicSize < 2)
+        {
+            cam.orthographicSize = 2;
+        }
         if (newPos.y < 2)
         {
             newPos.y = 2;
