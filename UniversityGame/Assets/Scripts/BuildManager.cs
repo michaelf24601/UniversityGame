@@ -2,69 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/**
- * Class in charge of building things. Has methods for placing objects, deleting objects, building and buldozing 
- * foundations, and just generally editing the building data. The public methods of this class will get called by the 
- * input sustem. 
- */
 public class BuildManager : MonoBehaviour
 {
-
-    // the tilespace coordinate of a tile
-    public struct Coord
+    //for now the only object that will be placed is a cube 
+    public void placeObject(Vector3 tilePos)
     {
-
-        public Coord(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-        public int X { get; }
-        public int Y { get; }
+        Vector3 objSpawnPoint = new Vector3(tilePos.x, tilePos.y + 0.5f, tilePos.z);
+        GameObject theCuuuuube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        theCuuuuube.transform.position = objSpawnPoint;
     }
-    
-    //TODO: move this and the building data to some other serializable class and make a loading system
-    public static GameObject[] objectTable;
-
-    /**
-     * Array of building space data which has tile data for multiple floors. This is what gets written to and loaded 
-     * from a file to save and generate the buildings for the game. this data only needs to exist while in build view.
-     */
-    public static BuildingSpace[,] buildingData;
-
-    private void Start()
+    public bool isPlacableLocation(Vector3 tilePos)
     {
-        TerrainGenerator tg = FindObjectOfType<TerrainGenerator>();
-        int buildSpaceLength = tg.size * tg.meshLength; //chunk length * chunk size
-        buildingData = new BuildingSpace[buildSpaceLength, buildSpaceLength];
+        Vector3 castPos = new Vector3(tilePos.x, 10, tilePos.z);
+        RaycastHit hit;
+        Physics.Raycast(castPos, Vector3.down, out hit, 12);
+        float dot = Vector3.Dot(Vector3.down, hit.normal);
+        return (dot == -1);
     }
 
-    /**
-     * updates the tiles data to reflect changes
-     */
-    public int placeObject(int objectID, Coord coord, int floor, int layer)
+    public Vector3 getTileCoordFromMousePos(Vector2 mousePos)
     {
-        //check build data to see if it is possible to place an object
-        //update buildData to add object
-        //update sprite layer to render new object
-        //generate 3d representation of object at calculated location
-        return 0;
-    }
-    public void generateObjectGeometry(int objectID, Coord coord, int floor, int layer)
-    {
-        //generates 3d geometry for an object
-    }
-    public bool isPlacableTile(Coord coord, int floor, int layer)
-    {
-        //  is object id valid, is floor valid, is layer already occupied
-        return true;
-    }
-    /**
-     * translates the worldspace coordinates of, presumably, the mouse pointer, to the tilespace coordinates of the 
-     * tile at that point.
-     */
-    public Coord worldToTilespace(float x, float y)
-    {
-        return new Coord((int)x, (int)y); //i think this is good for now
+        //Vector2 pos = Camera.main.ScreenToWorldPoint(mousePos);
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
+        Vector3 tileCoord = hit.point;
+        tileCoord.x = Mathf.Round(tileCoord.x);
+        tileCoord.y = Mathf.Round(tileCoord.y);
+        tileCoord.z = Mathf.Round(tileCoord.z);
+        return tileCoord;
     }
 }
