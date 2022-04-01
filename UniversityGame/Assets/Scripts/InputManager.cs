@@ -43,7 +43,6 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(buildManager.getTileCoordFromMousePos(Input.mousePosition));
         if (Input.GetMouseButtonDown(0))
         {
             //check if over ui element

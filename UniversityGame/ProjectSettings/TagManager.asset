@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Scanner
   - Foundation
+  - Roof
   layers:
   - Default
   - TransparentFX

@@ -26,6 +26,13 @@ public class BuildModeManager : MonoBehaviour
 
                 //de-activate the build mode UI
                 buildModeUI.SetActive(false);
+
+                //render all the roofs
+                GameObject[] roofs = GameObject.FindGameObjectsWithTag("Roof");
+                foreach (GameObject roof in roofs)
+                {
+                    roof.GetComponent<Renderer>().enabled = true;
+                }
             } else if (cameraController.currentState == CameraController.State.Normal)
             {
                 //change camera position and camera controller input settings
@@ -34,6 +41,13 @@ public class BuildModeManager : MonoBehaviour
 
                 //activate the input manager
                 buildModeUI.gameObject.SetActive(true);
+
+                //hide all the roofs
+                GameObject[] roofs = GameObject.FindGameObjectsWithTag("Roof");
+                foreach(GameObject roof in roofs)
+                {
+                    roof.GetComponent<Renderer>().enabled = false;
+                }
             }
         }
     }

@@ -67,18 +67,40 @@ public class BuildManager : MonoBehaviour
 
     public void buildFoundation(Vector3 startPos, Vector3 endPos)
     {
-        //resize cube to be foundation
-        Vector3 spawnPoint = (startPos + endPos) / 2;
+        //calculate foundation info from start and end pos
+        Vector3 spawnPoint = new Vector3((startPos.x + endPos.x)/2f,startPos.y, (startPos.z + endPos.z)/2f);
+        spawnPoint.x += 0.5f; //offset needed to get the center point instead of the bottom left corner
+        spawnPoint.z += 0.5f;
         spawnPoint.y = startPos.y;
-        float xlen = Mathf.Abs(startPos.x - endPos.x);
-        float zlen = Mathf.Abs(startPos.z - endPos.z);
+        float xlen = Mathf.Abs(startPos.x - endPos.x) + 1; //again need offset to get correct position
+        float zlen = Mathf.Abs(startPos.z - endPos.z) + 1;
+        Vector3 bottomLeftCorner = new Vector3(spawnPoint.x - xlen / 2, startPos.y, spawnPoint.z - zlen / 2);
+
+        //check that foundation is level
+        if (startPos.y != endPos.y) return;
+        for (int x = 0; x < xlen; x++)
+        {
+            for (int z = 0; z < zlen; z++)
+            {
+                Vector3 castPos = new Vector3(bottomLeftCorner.x + x + 0.5f, 10, bottomLeftCorner.z + z + 0.5f);
+                RaycastHit hit;
+                LayerMask mask = LayerMask.GetMask("Terrain");
+                Physics.Raycast(castPos, Vector3.down, out hit, 11f, mask);
+                Debug.DrawLine(castPos, hit.point, Color.red, float.MaxValue);
+                if (hit.point.y != startPos.y)
+                {
+                    return;
+                }
+            }
+        }
+
+        //spawn foundation
         GameObject foundation = GameObject.CreatePrimitive(PrimitiveType.Cube);
         foundation.transform.localScale = new Vector3(xlen, 0.01f, zlen);
         foundation.transform.position = spawnPoint;
         foundation.tag = "Foundation";
 
         //auto generate walls for foundation
-        Vector3 bottomLeftCorner = new Vector3(spawnPoint.x - xlen / 2, startPos.y, spawnPoint.z - zlen / 2);
         for (int i = 0; i < xlen; i++)
         {
             Vector3 bottomWallPos = new Vector3(bottomLeftCorner.x + i, bottomLeftCorner.y, bottomLeftCorner.z);
@@ -87,14 +109,19 @@ public class BuildManager : MonoBehaviour
             placeObject(topWallPos);
         }
         
-        for (int i = 1; i < zlen; i++)
+        for (int i = 1; i < zlen - 1; i++)
         {
             Vector3 leftWallPos = new Vector3(bottomLeftCorner.x, bottomLeftCorner.y, bottomLeftCorner.z + i);
             Vector3 rightWallPos = new Vector3(bottomLeftCorner.x + xlen - 1, bottomLeftCorner.y, bottomLeftCorner.z + i);
             placeObject(leftWallPos);
             placeObject(rightWallPos);
         }
-        
+        //auto generate roof
+        GameObject roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        roof.transform.localScale = new Vector3(xlen, 1, zlen);
+        roof.transform.position = new Vector3(foundation.transform.position.x, foundation.transform.position.y + 1.5f, foundation.transform.position.z);
+        roof.tag = "Roof";
+        roof.GetComponent<Renderer>().enabled = false; //roofs don't render in build mode by default
     }
 
     /**
