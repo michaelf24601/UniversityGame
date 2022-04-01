@@ -30,6 +30,7 @@ public class TerrainGenerator : MonoBehaviour
 
         //holder parent game object for all the meshes
         GameObject bigDaddy = new GameObject();
+        bigDaddy.layer = 3; //terrain layer
         Transform daddy = bigDaddy.transform;
         bigDaddy.name = "Terrain";
 
@@ -40,6 +41,7 @@ public class TerrainGenerator : MonoBehaviour
             {
                 string chunkName = "Chunk_" + chunkNum;
                 GameObject childObj = new GameObject();
+                childObj.layer = 3; //terrain layer
                 Transform child = childObj.transform;
                 child.name = chunkName;
                 Mesh chunk = createMesh(x, z);

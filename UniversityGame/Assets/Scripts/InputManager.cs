@@ -43,6 +43,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(buildManager.getTileCoordFromMousePos(Input.mousePosition));
         if (Input.GetMouseButtonDown(0))
         {
             //check if over ui element
@@ -73,6 +74,12 @@ public class InputManager : MonoBehaviour
                     startDragPos = buildManager.getTileCoordFromMousePos(Input.mousePosition);
                 }
             }
+            if (currentInstruction == Instruction.Delete)
+            {
+                Debug.Log("player is trying to delete an object");
+                Vector3 tilePos = buildManager.getTileCoordFromMousePos(Input.mousePosition);
+                buildManager.deleteObject(tilePos);
+            }
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -80,60 +87,7 @@ public class InputManager : MonoBehaviour
             {
                 Debug.Log("draggable area selected");
                 Vector3 endDragPos = buildManager.getTileCoordFromMousePos(Input.mousePosition);
-                float height = startDragPos.y;
-                
-                if (endDragPos.x > startDragPos.x && endDragPos.z > startDragPos.z)
-                {
-                    for (int x = (int)startDragPos.x; x < endDragPos.x; x++)
-                    {
-                        for (int z = (int)startDragPos.z; z < endDragPos.z; z++)
-                        {
-                            Vector3 placePos = new Vector3(x, height, z);
-                            Debug.Log("filling object at " + placePos);
-                            buildManager.placeObject(placePos);
-                        }
-                    }
-                }
-                else if (endDragPos.x < startDragPos.x && endDragPos.z > startDragPos.z)
-                {
-                    Debug.Log("1");
-                    for (int x = (int)startDragPos.x; x > endDragPos.x; x--)
-                    {
-                        for (int z = (int)startDragPos.z; z < endDragPos.z; z++)
-                        {
-                            Vector3 placePos = new Vector3(x, height, z);
-                            Debug.Log("filling object at " + placePos);
-                            buildManager.placeObject(placePos);
-                        }
-                    }
-                } 
-                else if (endDragPos.x < startDragPos.x && endDragPos.z < startDragPos.z)
-                {
-                    Debug.Log("2");
-                    for (int x = (int)startDragPos.x; x > endDragPos.x; x--)
-                    {
-                        for (int z = (int)startDragPos.z; z > endDragPos.z; z--)
-                        {
-                            Vector3 placePos = new Vector3(x, height, z);
-                            Debug.Log("filling object at " + placePos);
-                            buildManager.placeObject(placePos);
-                        }
-                    }
-                } 
-                else if (endDragPos.x > startDragPos.x && endDragPos.z < startDragPos.z)
-                {
-                    Debug.Log("3");
-                    for (int x = (int)startDragPos.x; x < endDragPos.x; x++)
-                    {
-                        for (int z = (int)startDragPos.z; z > endDragPos.z; z--)
-                        {
-                            Vector3 placePos = new Vector3(x, height, z);
-                            Debug.Log("filling object at " + placePos);
-                            buildManager.placeObject(placePos);
-                        }
-                    }
-                }
-
+                buildManager.buildFoundation(startDragPos, endDragPos);
                 isDragging = false;
             }
         }
